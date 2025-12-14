@@ -1,0 +1,48 @@
+@import "tailwindcss";
+
+/* Set up font families */
+
+@theme {
+    --font-lexend: "Lexend", serif;
+}
+
+/* Custom Utilities */
+
+button{
+    cursor: pointer;
+}
+
+.flex-between-x{
+    @apply flex justify-between items-center;
+}
+
+.flex-center-x{
+    @apply flex justify-center items-center;
+}
+
+.transition-custom {
+    @apply transition-all duration-500 ease-in-out;
+}
+
+/* Custom CSS */
+
+.scrolled {
+    position: sticky;
+    top: 0;
+    left: 0;
+    width: 100%;
+    z-index: 2000;
+    background-color: white;
+    animation: scrolledIn 0.5s ease-in-out forwards;
+}
+
+@keyframes scrolledIn {
+    0% {
+        opacity: 0;
+        transform: translateY(-100%);
+    }
+    100% {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
