@@ -16,6 +16,11 @@ const nextConfig = {
                 protocol: "https",
                 hostname: "press.kia.com",
                 pathname: "/**",
+            },
+            {
+                protocol: "https",
+                hostname: "placehold.co",
+                pathname: "/**",
             }
         ],
     },

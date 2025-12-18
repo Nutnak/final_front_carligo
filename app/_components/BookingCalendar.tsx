@@ -9,7 +9,6 @@ import { DayPicker, DateRange } from 'react-day-picker';
 import { fr } from 'react-day-picker/locale';
 import 'react-day-picker/dist/style.css';
 import generateTimeSlots from '../utils/timeDate';
-import { fetchAvailableVehicles } from '../services/vehicles';
 import { useBookingStore } from '../store/bookingStore';
 import { Vehicle } from '../types/vehicles';
 import React from 'react';
