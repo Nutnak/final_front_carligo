@@ -23,9 +23,17 @@ export function VehicleBookingCalendar({ vehicle }) {
   const router = useRouter();
   const { setDates, start: startIso, end: endIso } = useBookingStore();
 
-  const [selectedRange, setSelectedRange] = useState();
-  const [startTime, setStartTime] = useState('');
-  const [endTime, setEndTime] = useState('');
+  // Initialiser la plage de dates à partir du store
+  const initialRange = useMemo(() => {
+    if (startIso && endIso) {
+      return { from: new Date(startIso), to: new Date(endIso) };
+    }
+    return undefined;
+  }, [startIso, endIso]);
+
+  const [selectedRange, setSelectedRange] = useState(initialRange);
+  const [startTime, setStartTime] = useState(startIso ? new Date(startIso).toLocaleTimeString('fr-FR', { hour: '2-digit', minute: '2-digit' }) : '');
+  const [endTime, setEndTime] = useState(endIso ? new Date(endIso).toLocaleTimeString('fr-FR', { hour: '2-digit', minute: '2-digit' }) : '');
   
   const [disabledDates, setDisabledDates] = useState([]);
   const [loading, setLoading] = useState(true);
