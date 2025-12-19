@@ -33,7 +33,6 @@ const Page = () => {
             <Services />
             <Testimonials />
             <Faq />
-            <Newsletter />
             <Footer />
             <ToastContainer
                 position="bottom-right"
