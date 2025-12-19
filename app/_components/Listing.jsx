@@ -1,6 +1,7 @@
 "use client";
 import React, { useEffect, useState } from "react";
 import Image from "next/image";
+import Link from "next/link";
 import { Car, ArrowRight } from "lucide-react"; // Changed icons
 import GlareHover from "./ui/GlareHover";
 import { useBookingStore } from "../store/bookingStore";
@@ -77,7 +78,8 @@ const Listing = () => {
                     </div>
                 ) : listings.length > 0 ? (
                     listings.map((listing) => (
-                        <div key={listing.id} className="w-full">
+                        <Link href={`/vehicules/${listing.id}`} key={listing.id}>
+                        <div className="w-full cursor-pointer">
                             <div className="relative w-full h-52 group">
                                 <GlareHover
                                     glareColor="#ffffff"
@@ -118,6 +120,7 @@ const Listing = () => {
                                 </div>
                             </div>
                         </div>
+                        </Link>
                     ))
                 ) : (
                      <div className="col-span-full text-center text-gray-500">
