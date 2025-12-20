@@ -28,8 +28,8 @@ const Page = () => {
         <>
             <Header />
             <HeroBanner />
-            <About />
             <Listing />
+            <About />
             <Services />
             <Testimonials />
             <Faq />
