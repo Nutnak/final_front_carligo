@@ -7,28 +7,30 @@ import { motion, AnimatePresence } from "framer-motion";
 const faqData = [
     {
         id: 1,
-        question: "What documents do I need to buy a house?",
-        answer: "To buy a house, you'll typically need proof of income (W-2s, pay stubs), tax returns, bank statements, proof of assets, credit report, and valid ID. Additional documents may be required depending on your specific situation.",
+        question: "Quels documents sont nécessaires pour louer un véhicule ?",
+        answer: {
+            text: "Pour toute location, vous devez présenter :",
+            bullets: [
+                "Un permis de conduire valide (depuis au moins 2 ans, selon le véhicule)",
+                "Une pièce d’identité en cours de validité",
+                "Une carte bancaire au nom du conducteur principal",
+            ],
+        },
     },
     {
         id: 2,
-        question: "What's the best time to buy a house?",
-        answer: "The best time to buy depends on various factors including market conditions, interest rates, and your personal circumstances. Generally, winter months may offer better deals due to less competition, while spring and summer typically have more inventory.",
+        question: "L’âge minimum est généralement de 21 ans.",
+        answer: "Certains véhicules (utilitaires volumineux, véhicules premium) peuvent nécessiter 25 ans minimum.",
     },
     {
         id: 3,
-        question: "How long does the home buying process take?",
-        answer: "The home buying process typically takes 30-60 days from offer acceptance to closing. However, this timeline can vary depending on factors such as loan approval, home inspection results, and other contingencies.",
+        question: "Puis-je réserver pour une autre personne ?",
+        answer: "Oui, à condition que le conducteur principal soit présent lors du retrait du véhicule avec ses documents.",
     },
     {
         id: 4,
-        question: "What should I look for during a property viewing?",
-        answer: "During a viewing, pay attention to the property's structural condition, signs of dampness or mold, electrical systems, plumbing, natural lighting, storage space, and the overall neighborhood. It's also important to check noise levels and visit at different times of day.",
-    },
-    {
-        id: 5,
-        question: "Should I get a home inspection?",
-        answer: "Yes, a home inspection is highly recommended. It helps identify potential issues with the property that may not be visible during a casual walkthrough and can save you from expensive repairs in the future.",
+        question: "Puis-je modifier ou annuler ma réservation ?",
+        answer: "Oui. Les modifications et annulations sont possibles jusqu’à 24 ou 48 heures avant le départ, selon les conditions tarifaires choisies.",
     },
 ];
 
@@ -128,9 +130,27 @@ const Faq = () => {
                                         }}
                                         style={{ overflow: "hidden" }}
                                     >
-                                        <p className="text-gray-600 mt-2 p-2 bg-gray-50 rounded-lg">
-                                            {item.answer}
-                                        </p>
+                                        <div className="text-gray-600 mt-2 p-2 bg-gray-50 rounded-lg">
+                                            {typeof item.answer === "string" ? (
+                                                <p>{item.answer}</p>
+                                            ) : (
+                                                <>
+                                                    <p>{item.answer.text}</p>
+                                                    <ul className="list-disc list-inside mt-2 space-y-1 pl-2">
+                                                        {item.answer.bullets.map(
+                                                            (
+                                                                bullet,
+                                                                index
+                                                            ) => (
+                                                                <li key={index}>
+                                                                    {bullet}
+                                                                </li>
+                                                            )
+                                                        )}
+                                                    </ul>
+                                                </>
+                                            )}
+                                        </div>
                                     </motion.div>
                                 )}
                             </AnimatePresence>

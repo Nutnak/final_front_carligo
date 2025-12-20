@@ -12,6 +12,7 @@ import BlurText from '../../_components/ui/BlurText';
 import { VehicleBookingCalendar } from '../../_components/VehicleBookingCalendar';
 import Header from '../../_components/Header';
 import Faq from '../../_components/Faq';
+import Footer from '../../_components/Footer';
 
 export default function VehicleDetailPage() {
   const params = useParams();
@@ -153,6 +154,7 @@ export default function VehicleDetailPage() {
     <Faq />
       </div>
     </section>
+    <Footer />
   </>
   );
 }
