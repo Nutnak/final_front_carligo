@@ -19,6 +19,18 @@ export default function RecapitulatifPage() {
   const [vehicle, setVehicle] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [customer, setCustomer] = useState({
+    lastName: '',
+    firstName: '',
+    email: '',
+    phone: '',
+  });
+  const [isOver21, setIsOver21] = useState(false);
+
+  const handleCustomerChange = (e) => {
+    const { name, value } = e.target;
+    setCustomer(prevState => ({ ...prevState, [name]: value }));
+  };
 
   useEffect(() => {
     if (!id) {
@@ -58,10 +70,11 @@ export default function RecapitulatifPage() {
 
     const rentalPrice = numberOfDays * vehicle.price_per_day;
     const deposit = 200;
-    const totalPrice = rentalPrice + deposit;
+    const youngDriverFee = isOver21 ? 0 : 50;
+    const totalPrice = rentalPrice + deposit + youngDriverFee;
 
-    return { numberOfDays, rentalPrice, deposit, totalPrice };
-  }, [startIso, endIso, vehicle]);
+    return { numberOfDays, rentalPrice, deposit, youngDriverFee, totalPrice };
+  }, [startIso, endIso, vehicle, isOver21]);
 
       const handlePayment = async () => {
     if (!priceDetails || !vehicle) return;
@@ -80,8 +93,10 @@ export default function RecapitulatifPage() {
           to: endIso,
           // L'objet customer est attendu par votre back-end
           customer: {
-            email: 'customer-email@example.com', // TODO: Remplacer par l'email du client connecté
-            name: 'John Doe', // TODO: Remplacer par le nom du client
+            email: customer.email,
+            firstname: `${customer.firstName}`,
+            name: `${customer.lastName}`,
+            phone: customer.phone,
           }
         }),
       });
@@ -151,6 +166,46 @@ export default function RecapitulatifPage() {
                 </div>
               </div>
             </div>
+            {/* Formulaire d'informations client */}
+            <div className="p-6 md:p-8 border-t border-gray-200">
+              <h3 className="text-xl font-semibold text-gray-800 mb-4">Vos informations</h3>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div>
+                  <label htmlFor="lastName" className="block text-sm font-medium text-gray-700 mb-1">Nom</label>
+                  <input type="text" id="lastName" name="lastName" value={customer.lastName} onChange={handleCustomerChange} className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-orange-500 focus:ring-orange-500 sm:text-sm p-2" />
+                </div>
+                <div>
+                  <label htmlFor="firstName" className="block text-sm font-medium text-gray-700 mb-1">Prénom</label>
+                  <input type="text" id="firstName" name="firstName" value={customer.firstName} onChange={handleCustomerChange} className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-orange-500 focus:ring-orange-500 sm:text-sm p-2" />
+                </div>
+                <div>
+                  <label htmlFor="email" className="block text-sm font-medium text-gray-700 mb-1">Email</label>
+                  <input type="email" id="email" name="email" value={customer.email} onChange={handleCustomerChange} className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-orange-500 focus:ring-orange-500 sm:text-sm p-2" />
+                </div>
+                <div>
+                  <label htmlFor="phone" className="block text-sm font-medium text-gray-700 mb-1">Téléphone</label>
+                  <input type="tel" id="phone" name="phone" value={customer.phone} onChange={handleCustomerChange} className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-orange-500 focus:ring-orange-500 sm:text-sm p-2" />
+                </div>
+              </div>
+              <div className="mt-6">
+                <div className="flex items-start">
+                  <div className="flex items-center h-5">
+                    <input
+                      id="isOver21"
+                      name="isOver21"
+                      type="checkbox"
+                      checked={isOver21}
+                      onChange={(e) => setIsOver21(e.target.checked)}
+                      className="focus:ring-orange-500 h-4 w-4 text-orange-600 border-gray-300 rounded"
+                    />
+                  </div>
+                  <div className="ml-3 text-sm">
+                    <label htmlFor="isOver21" className="font-medium text-gray-700">Je certifie avoir plus de 21 ans</label>
+                    <p className="text-gray-500">Un supplément de 50€ pour jeune conducteur sera appliqué si vous avez moins de 21 ans.</p>
+                  </div>
+                </div>
+              </div>
+            </div>
 
             {/* Résumé du prix */}
             <div className="p-6 md:p-8 border-t border-gray-200">
@@ -164,6 +219,12 @@ export default function RecapitulatifPage() {
                   <span>Caution</span>
                   <span>{priceDetails.deposit.toLocaleString()}€</span>
                 </div>
+                {priceDetails.youngDriverFee > 0 && (
+                  <div className="flex justify-between text-gray-600">
+                    <span>Supplément jeune conducteur</span>
+                    <span>{priceDetails.youngDriverFee.toLocaleString()}€</span>
+                  </div>
+                )}
                 <div className="border-t border-gray-200 my-2"></div>
                 <div className="flex justify-between font-bold text-gray-900 text-lg">
                   <span>Total</span>
