@@ -9,12 +9,13 @@ import { format } from 'date-fns-tz';
 import fr from 'date-fns/locale/fr';
 import Loader from '../../_components/ui/Loader';
 import Header from '../../_components/Header';
+import Supplements from '../../_components/Supplements';
 
 export default function RecapitulatifPage() {
   const params = useParams();
   const { id } = params;
 
-  const { start: startIso, end: endIso } = useBookingStore();
+  const { start: startIso, end: endIso, selectedSupplements } = useBookingStore();
 
   const [vehicle, setVehicle] = useState(null);
   const [loading, setLoading] = useState(true);
@@ -71,10 +72,11 @@ export default function RecapitulatifPage() {
     const rentalPrice = numberOfDays * vehicle.price_per_day;
     const deposit = 200;
     const youngDriverFee = isOver21 ? 0 : 50;
-    const totalPrice = rentalPrice + deposit + youngDriverFee;
+    const supplementsPrice = selectedSupplements.reduce((total, sup) => total + sup.price, 0);
+    const totalPrice = rentalPrice + deposit + youngDriverFee + supplementsPrice;
 
-    return { numberOfDays, rentalPrice, deposit, youngDriverFee, totalPrice };
-  }, [startIso, endIso, vehicle, isOver21]);
+    return { numberOfDays, rentalPrice, deposit, youngDriverFee, supplementsPrice, totalPrice };
+  }, [startIso, endIso, vehicle, isOver21, selectedSupplements]);
 
       const handlePayment = async () => {
     if (!priceDetails || !vehicle) return;
@@ -94,10 +96,10 @@ export default function RecapitulatifPage() {
           // L'objet customer est attendu par votre back-end
           customer: {
             email: customer.email,
-            firstname: `${customer.firstName}`,
-            name: `${customer.lastName}`,
+            name: `${customer.firstName} ${customer.lastName}`,
             phone: customer.phone,
-          }
+          },
+          supplements: selectedSupplements,
         }),
       });
 
@@ -165,6 +167,9 @@ export default function RecapitulatifPage() {
                   </div>
                 </div>
               </div>
+
+            <Supplements vehicleId={id} />
+
             </div>
             {/* Formulaire d'informations client */}
             <div className="p-6 md:p-8 border-t border-gray-200">
@@ -221,8 +226,20 @@ export default function RecapitulatifPage() {
                 </div>
                 {priceDetails.youngDriverFee > 0 && (
                   <div className="flex justify-between text-gray-600">
-                    <span>Supplément jeune conducteur</span>
-                    <span>{priceDetails.youngDriverFee.toLocaleString()}€</span>
+                  <span>Supplément jeune conducteur</span>
+                  <span>{priceDetails.youngDriverFee.toLocaleString()}€</span>
+                  </div>
+                )}
+
+                {selectedSupplements.length > 0 && (
+                  <div className="mt-2 pt-2 border-t">
+                    <h4 className="font-semibold text-gray-700">Suppléments</h4>
+                    {selectedSupplements.map(sup => (
+                      <div key={sup.id} className="flex justify-between text-gray-600">
+                        <span>{sup.name}</span>
+                        <span>{sup.price.toLocaleString()}€</span>
+                      </div>
+                    ))}
                   </div>
                 )}
                 <div className="border-t border-gray-200 my-2"></div>
